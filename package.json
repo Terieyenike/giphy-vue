@@ -9,7 +9,10 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
-    "vue": "^2.6.10"
+    "dotenv": "8.2.0",
+    "vue": "^2.6.10",
+    "vue-axios": "2.1.5",
+    "vue-function-api": "3.0.0-beta.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.9.0",

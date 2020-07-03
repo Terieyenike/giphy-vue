@@ -1,28 +1,73 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <section class="section container">
+    <!-- SEARCH ========================================== -->
+    <h2 class="title">Search</h2>
+
+    <input type="text" class="input" name="query" v-model="query" @keyup.enter="searchGifs" />
+    <gif-grid :gifs="searchedGifs"></gif-grid>
+
+    <!-- TRENDING ======================================= -->
+    <h2 class="title">Trending</h2>
+
+    <gif-grid :gifs="trendingGifs"></gif-grid>
+  </section>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import GifGrid from "./components/GifGrid";
 export default {
-  name: 'app',
   components: {
-    HelloWorld
+    GifGrid
+  },
+  data() {
+    return {
+      apiUrl: "http://api.giphy.com/v1/gifs",
+      apiKey: process.env.VUE_APP_API_KEY,
+      trendingGifs: null,
+      searchedGifs: null,
+      query: ""
+    };
+  },
+  methods: {
+    fetchGifs() {
+      const url = `${this.apiUrl}/trending?api_key=${this.apiKey}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => (this.trendingGifs = data.data));
+    },
+    searchGifs() {
+      const url = `${this.apiUrl}/search?api_key=${this.apiKey}&q=${this.query}&limit=8`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => (this.searchedGifs = data.data));
+      this.query = "";
+    }
+  },
+  created() {
+    this.fetchGifs();
   }
-}
+};
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+input[type="text"] {
+  margin-bottom: 2em;
+}
+
+.gif-box {
+  position: relative;
+  background: #333;
+}
+.gif-user {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 15px;
+  bottom: 15px;
+}
+.gif-user img {
+  margin-right: 8px;
 }
 </style>
